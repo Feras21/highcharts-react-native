@@ -38,7 +38,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-web": "~0.11.7",
     "react-native-webview": "10.6.0",
-    "@highcharts/highcharts-react-native": "./dist/"
+    "@highcharts/highcharts-react-native": "github:russriser/highcharts-dist#master"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
