@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
@@ -13,6 +13,8 @@ let cdnPath = 'code.highcharts.com/';
 let httpProto = 'http://';
 
 export default class HighchartsReactNative extends React.PureComponent {
+ 
+ 
   static getDerivedStateFromProps(props, state) {
     let width = Dimensions.get('window').width;
     let height = Dimensions.get('window').height;
@@ -90,7 +92,6 @@ export default class HighchartsReactNative extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
     if (props.useSSL) {
       httpProto = 'https://';
     }
@@ -117,8 +118,8 @@ export default class HighchartsReactNative extends React.PureComponent {
     this.setHcAssets(this.state.useCDN);
   }
   componentDidUpdate() {
-    this.webviewRef &&
-      this.webviewRef.postMessage(this.serialize(this.props.options, true));
+    // this.webviewRef &&
+    //   this.webviewRef.postMessage(this.serialize(this.props.options, true));
   }
   componentDidMount() {
     this.setState({ renderedOnce: true });
@@ -162,9 +163,6 @@ export default class HighchartsReactNative extends React.PureComponent {
       const scriptsPath = this.state.useCDN ? httpProto.concat(cdnPath) : path;
       const setOptions = this.state.setOptions;
       const runFirst = `
-                window.postMessage = function(${this.props.data}) {
-                  window.ReactNativeWebView.postMessage(${this.props.data});
-                };
                 window.data = \"${this.props.data ? this.props.data : null}\";
                 var modulesList = ${JSON.stringify(this.state.modules)};
                 var readable = ${JSON.stringify(stringifiedScripts)}
@@ -212,18 +210,15 @@ export default class HighchartsReactNative extends React.PureComponent {
           ]}
         >
           <WebView
-            ref={(ref) => {
-              this.webviewRef = ref;
-            }}
+            ref={this.webviewRef}
             onMessage={
-              this.props.onMessage
-                ? (event) => {
-                  alert("Inside HighChart OnMessage");
-                  this.props.onMessage(event.nativeEvent.data)
+              (event) => {
+                try {
+                  this.props.onMessage(event.nativeEvent.data); 
+                } catch (error) {
+                  alert(error);
                 }
-                : () => {
-                  alert("Inside HighChart OnMessage Empty");
-                }
+              }
             }
             source={{
               html: `<html>

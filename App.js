@@ -38,7 +38,6 @@ export default class App extends React.Component {
           useSSL={true}
           modules={modules}
           onMessage={message => {
-            alert("App.Js On Message")
             this.props.onMessage(message)
           }}
         />
