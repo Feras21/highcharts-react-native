@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import HighchartsReactNative from './dist';
 
 const modules = [
@@ -11,33 +11,30 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      chartOptions: this.props.options || {
-        chart: {
-          type: 'column',
-        },
-        title: {
-          text: 'Chart Title',
-        },
-        series: [
-          {
-            data: [1, 3, 2],
-          },
-        ],
-      },
+      chartOptions: JSON.stringify(this.props.options)
     };
+
   }
 
+componentDidUpdate(prevProps){
+    if(prevProps.options !== this.props.options){
+      this.setState({
+        chartOptions: JSON.stringify(this.props.options)
+      }); 
+    }
+}
   render() {
     return (
       <View style={styles.container}>
         <HighchartsReactNative
           useCDN={true}
           styles={styles.container}
-          options={this.state.chartOptions}
+          options={ JSON.parse(this.state.chartOptions)}
           devPath={'192.168.0.1:12345'}
           useSSL={true}
           modules={modules}
           onMessage={message => {
+            console.log(message);
             this.props.onMessage(message)
           }}
         />
