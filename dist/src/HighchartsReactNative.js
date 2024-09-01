@@ -199,6 +199,16 @@ export default class HighchartsReactNative extends React.PureComponent {
                         }
                     }, redraw);
                 }, false);
+
+            Highcharts.charts[0].update({
+            plotOptions: {
+                pie: {
+                    events: {
+                        click:${this.state?.chartOptions?.plotOptions?.pie?.events?.click?.toString()}
+                    }
+                }
+            }
+        });
             `;
 
       // Create container for the chart
@@ -216,7 +226,7 @@ export default class HighchartsReactNative extends React.PureComponent {
                 try {
                   this.props.onMessage(event.nativeEvent.data); 
                 } catch (error) {
-                  alert(error);
+                  console.log(error);
                 }
               }
             }
